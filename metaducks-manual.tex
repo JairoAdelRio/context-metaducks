@@ -1,0 +1,2030 @@
+\usemodule[metaducks]
+\usecolors[svg]
+\setupinteraction
+    [state=start,
+     focus=standard,
+     color=blueviolet,
+     contrastcolor=blueviolet]
+\setupinteractionscreen[option=bookmark]
+\placebookmarks[chapter,section][chapter,section]
+%EN: Fancy colors
+%ES: Colores bonitos
+\usemodule[scite]
+\setuphead[chapter,section]
+    [numberstyle=\bold,
+     textstyle=\bold,
+     color=darkmagenta]
+\setuptyping[option=TEX]
+\setuptype[option=TEX]
+\usesymbols[fontawesome]
+\setupindenting[yes,small]
+\setuplayout[width=middle]
+\setupbodyfont[dejavu,10pt]
+\def\NEW{{\red\symbol[fontawesome][gift]}}
+\setupTABLE[c][each][frame=off,width=.5\textwidth,offset=0.5em]
+\setupTABLE[2][2][corner=06,align={middle,lohi}]
+\setupTABLE[r][1][background=color,backgroundcolor=darkmagenta,color=white]
+\setupTABLE[r][2][background=color,backgroundcolor=plum]
+\setupTABLE[1][1][corner=08]
+\setupTABLE[1][2][corner=07]
+\setupTABLE[2][1][corner=05]
+\setuppagenumbering[location=]
+\setupfootertexts[{%
+\ducks
+    [unitsize=1.5em,
+     \randomduckhead=yes,
+     signpost=yes,
+     signtext={\userpagenumber}]}]
+\startdocument
+  [title={Metaducks},
+   subtitle={Ducks for \CONTEXT !},
+   author={Jairo A. del Rio},
+   date=\currentdate,
+  ]
+\startstandardmakeup[align=middle]
+\setuppositioning[unit=cm]
+\startpositioning
+\dorecurse{6}%
+	{\dorecurse{6}%
+		{
+		\begingroup
+		\definecolor[tmp][h=\luaexpr{10*(6*(#1-1)+##1)},s=1,v=1]%
+		\position(\the\numexpr2*#1\relax,\the\numexpr2*##1\relax)%
+		{\ducks[unitsize=7.5mm,laughing=yes,color=tmp]}
+		\endgroup
+		}
+	}
+\stoppositioning
+\blank[line]
+\bgroup\tfd%
+\type{metaducks}: \translate[en=User manual,es=Manual de usuario]
+\blank
+Jairo A. del Rio
+\blank
+\translate[en=Version,es=Versión]\nobreakspace2020/3/13
+\egroup
+\stopstandardmakeup
+\completecontent
+\startchapter[title={\translate[en=Acknowledgements,es=Agradecimientos]}]
+\startmode[**en]
+Although everybody knows an acknowledgement list will always be incomplete, I want to mention some of the people who made this possible:
+
+Sam Carter for the original idea and the nice package she created and maintains. {\pt Paulo Cereda}, whose suggestion avoided this module to be called a plain \quote{\type{ducks}} or a more boring possibility. {\nl Hans Hagen}, {\de Wolfgang Schuster}, Aditya Mahajan, {\de Henri Menke} and the \CONTEXT\ user base for answering my questions and giving tips and tricks to properly use \CONTEXT\ with its unbeatable tools. And all \TEX\ users, no matter if Plain, \LATEX, \CONTEXT\ or another, for such a great and diverse community. All duck lovers around the world, regardless of language, religion or nationality. Ducks rock (and swim)! For all of you is this module.
+\stopmode
+\startmode[**es]
+Aunque todos sabemos que una lista de agradecimientos jamás estará completa, deseo de corazón mencionar a algunas de las personas que hicieron esto posible:
+
+A {\english Sam Carter} por la idea original y por el adorable paquete que creó y que mantiene para \LATEX. A {\pt Paulo Cereda}, gracias a cuya sugerencia este módulo no tiene un nombre más aburrido. A {\italian Romano Giannetti} por sus sugerencias para traducir el manual en español. A {\nl Hans Hagen}, {\de Wolfgang Schuster}, {\english Aditya Mahajan}, {\de Henri Menke} y la base de usuarios de \CONTEXT\ por resolver mis dudas y darme consejos para explotar \CONTEXT\ al máximo. A todos los usuarios de \TEX, ya sea Plain, \LATEX, \CONTEXT\ o cualquier otro formato, por una comunidad tan grande y diversa. A todos los amantes de los patos en el mundo, más allá de su idioma, religión y nacionalidad. Como dirían los españoles, ¡los patos molan!
+\stopmode
+\stopchapter
+
+\startchapter[title={\translate[en=Rationale,es=Motivación]}]
+\startmode[**en]
+I love ducks as much as I love my girlfriend, who is a duck breeder, and almost as much I'm abhorred by TikZ's feature creep, its slowness and its huge manual. Don't misunderstand me, I hugely appreciate the effort users and maintainers put on TikZ and even desire some features/libraries to be implemented in \CONTEXT, such as \type{graphdrawing}; however, I still don't like TikZ. Besides that, TikZ is rather geared to \LATEX\ and keeping things right with \CONTEXT\ sometimes is a toothache. I think some \TEX\ users who migrate from \LATEX\ to \CONTEXT\ or just like ducks and \CONTEXT, but are uncomfortable with TikZ, would be pleased with this little module. 
+
+(I've just realized that some \CONTEXT\ users were angry because of too many ducks in the \TEX\ community. Sorry, now ducks are in \CONTEXT\ too!)
+\stopmode
+\startmode[**es]
+Amo a los patos tanto como a mi novia (ella cría patitos) y casi tanto como detesto el exceso de rasgos de TikZ, su enfermiza lentitud y su desmesurado manual. Que no se me entienda mal, aprecio el esfuerzo de quienes usan y mantienen TikZ e incluso deseo que algunas características estén disponibles en \CONTEXT, tales como {\english\typ{graphdrawing}}. Sin embargo, simplemente detesto TikZ. Aparte de ellos, TikZ está hecho en esencia para \LATEX\ y hacer que integre con \CONTEXT\ es fastidioso por decir lo menos. Pienso que los usuarios que migran de \LATEX\ a \CONTEXT\ o simplemente disfrutan de los patitos y de \CONTEXT, pero se sienten incómodos con TikZ, disfrutarían de ese pequeño módulo.
+
+(Mientras preparaba este documento, me enteré de que algunos usuarios de \CONTEXT\ estaban enfadados por el exceso de patos en la comunidad de usuarios de \TEX. Perdón a ellos, ¡pero ahora hay patos en \CONTEXT !).
+\stopmode
+\stopchapter
+
+\startchapter[title={\translate[en=Differences and caveats,es=Diferencias y observaciones]}]
+\startmode[**en]
+Because this is a port from a package written in TikZ, it's worthwhile to explain differences and limitations with respect to \LATEX's TikZducks. There is, for instance, a difference between PGF/TikZ and \CONTEXT\ way of handling with key-value pairs. \type{pgfkeys} is very happy with the following:
+\stopmode
+\startmode[**es]
+Puesto que esta es una «traducción» de un paquete escrito originalmente en TikZ, conviene explicar las diferencias y limitaciones con respecto al paquete de \LATEX. Hay, por ejemplo, una diferencia entre el modo en que PGF/TikZ y \CONTEXT\ trabajan con los pares clave-valor. \type{pgfkeys} no se inmuta al procesar:
+\stopmode
+\startmode[**en]
+\starttyping
+\somecommand[option1,key1=value1,key2=value2,option2]
+\stoptyping
+\stopmode
+\startmode[**es]
+\starttyping
+\uncomando[opción1,clave1=valor1,clave2=valor2,opción2]
+\stoptyping
+\stopmode
+\startmode[**en]
+\CONTEXT, on the other hand, doesn't mix those alternatives, and in order not to overcomplicate this module (after all, \MetaPost\ gives faster results when cautiously exploited), this module is based on a rather straightforward key-value interface. For instance, \type{body=blue} won't work and you should use \type{bodycolor=blue} instead. The same applies for eyes, bill and head. Another instance: if you need a crozier for your duck, the way to specify is
+\stopmode
+\startmode[**es]
+\CONTEXT, por otra parte, no combina estas alternativas, y para no complicar más este módulo (después de todo, \MetaPost\ da resultados veloces cuando se explota adecuadamente), este módulo se basa en una intervaz clave-valor más bien sencilla. Por ejemplo, \type{body=blue} no va a funcionar por sí solo, pues hay que utilizar \type{bodycolor=blue} en su lugar. Lo mismo para ojos, pico y cabeza. Otro ejemplo, si necesitas un cayado para tu patito, el modo de hacerlo es
+\stopmode
+\starttyping
+\definecolor[mybrown][.5(xcolorbrown)]
+\ducks
+    [
+    crozier=yes,%Indispensable
+    croziercolor=mybrown
+    ]
+\stoptyping
+\startmode[**en]
+If you only set \type{crozier=yes}, a default color will be selected.
+
+Additionally, colors should be defined beforehand using \type{\definecolor} and allies. If you want to mix colors the \LaTeX\ way, you should include \type{\enabledirectives[colors.pgf]} in your preamble. Like this:
+\stopmode
+\startmode[**es]
+Si usas solo \type{crozier=yes}, se utilizará un color elegido por defecto.
+
+Además, debes definir tus colores previamente utilizando \type{\definecolor} y similares. Si quieres combinar colores como se hace en \LATEX, debes incluir \type{\enabledirectives[colors.pgf]} en tu preámbulo. Así:
+\stopmode
+\starttyping
+\enabledirectives[colors.pgf]
+\usecolors[svg]
+\usemodule[metaducks]
+%EN: Only for two colors!
+%ES: ¡Solo funciona con dos colores!
+\definecolor[mycolor][gold!50!violet]
+\starttext
+\ducks[bodycolor=mycolor]
+\stoptext
+\stoptyping
+\startmode[**en]
+Surely a cleverer alternative is possible and I'll have to find out it (possibly guided by Hans and Wolfgang). In the meantime those are your options.
+
+Another point on color: this module includes a companion called \type{xcolor} (actually \type{colo-imp-xcolor.mkiv}) so ducks are roughly the same both in \CONTEXT\ and \LATEX. Because of this, we're actually using colors named \type{xcoloryellow}, \type{xcolorcyan} and so on to avoid clashes with other color schemes in \CONTEXT. The complete list is shown above.
+\stopmode
+\startmode[**es]
+No dudo que mejores alternativas son posibles, tarea que tengo pendiente (posiblemente con ayuda de Hans y Wolfgang). Por el momento esas son tus opciones.
+
+Otra observación respecto a los colores: este módulo incluye a un módulo ancillar llamado \type{xcolor} (en realidad, \type{colo-imp-xcolor.mkiv}) para que los patitos tengan más o menos el mismo aspecto en \CONTEXT\ y \LATEX. Por tal motivo, estamos utilizando nombres como \type{xcoloryellow}, \type{xcolorcyan} y otros con tal de evitar conflictos con otros esquemas de colores en \CONTEXT. La lista completa es la siguiente.
+\stopmode 
+% Lista de colores
+\showcolor[xcolor]
+%
+\startmode[**en]
+So, you should be able of using something like
+\stopmode
+\startmode[**es]
+Así pues, debes ser capaz de utilizar algo como:
+\stopmode
+\starttyping
+\usecolors[xwi]
+\ducks[bodycolor=gold]
+\stoptyping
+
+\startmode[**en]
+and keep the duck color palette the same. Only RGB colors are supported (this is rather an issue than a bug, so be careful not to use other colors or you'll get some grayish coloring). 
+
+As for size, and unlike \MetaPost, TikZ defaults to centimeters. To adjust that, I've included an \type{unitsize} key in order to scale your picture accordingly. 
+
+Most of TikZducks options are available and I've added some new of them, but don't forget to initialize them via \type{<option>=yes} and only then \type{<option>color=...}, when possible. Random ducks are also available.
+
+So far, stripes aren't implemented (but I promise I'll do soon).
+
+Finally, a small legal disclosure. The \emph{chullo} or winter hat has been adapted from art by \goto{Freepik}[url(https://www.freepik.com/)] and accordingly attribution has been given both in documentation and code.
+\stopmode
+\startmode[**es]
+y mantener la paleta de colores del patito como antes. Solo los colores RGB funcionan sin problemas (esto es un rasgo de \CONTEXT\ y no un error, así que cuidado con utilizar otros esquemas pues obtendrás algunos colores grisáceos).
+
+Respecto al tamaño, y a diferencia de lo que sucede con \MetaPost, TikZ mide con centímetros. Para ajustar aquello, he incluido la palabra clave \type{unitsize} para cambiar la escala de la figura de acuerdo con la necesidad.
+
+La mayoría de opciones de TikZducks está disponible y he incluido algunas nuevas, pero no olvides iniciarlas primero con \type{<opción>=yes} y solo luego \type{<opción>color=...} cuando sea posible cambiar el color. Los patos aleatorios también están disponibles.
+
+Por el momento, las rayas no están disponibles, pero pronto lo haré. Promesa.
+
+Finalmente, una pequeña declaración legal. El chullo ha sido adaptado de una obra de \goto{Freepik}[url(https://www.freepik.com/)] y, conforme con los términos de su licencia, se ofrece la atribución tanto en la documentación como en el código.
+\stopmode
+\stopchapter
+
+\startchapter[title={\translate[en=Usage,es=Uso]}]
+
+\startmode[**en]
+Most of the options available here are present in TikZducks, too. However, I made some additions which will be marked as \NEW. You're warned. 
+\stopmode
+\startmode[**es]
+La mayoría de las opciones disponibles aquí también están presentes en TikZducks. Sin embargo, he realizado algunas adiciones que estarán marcadas como \NEW. No digas que no te lo advertí.
+\stopmode
+\type{;)}
+
+\startsection[title={\translate[en=Body parts,es=Partes del cuerpo]}]
+\startmode[**en]
+Body parts (\type{body}, \type{head}, \type{bill}, \type{eye}, and \type{pupil}) have their own color. They are enabled by default and it's impossible to disable any of them, unless users demand for such changes.
+\stopmode
+\startmode[**es]
+Las parte del cuerpo del patito (\type{body}, \type{head}, \type{bill}, \type{eye}, y \type{pupil}) tienen su propio color. Están habilitadas por defecto y es imposible deshabilitarlas, a no ser que los usuarios así lo soliciten.
+\stopmode
+
+\startbuffer
+%\usecolors[svg]
+\ducks
+    [headcolor=darkgreen,
+    billcolor=darkorange,
+    eyecolor=ghostwhite,
+    pupilcolor=darkgreen,
+    bodycolor=xcolorlightgray,
+    wing=yes,
+    wingcolor=xcolorblack,
+    speech=yes,
+    speechtext={%
+    \translate[en=Hi!,
+               es=Hola]}]
+\stopbuffer
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=A nice duck says hi!,es=Un pato dice hola]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\startmode[**en]
+Additionally, \type{grumpy}, \type{laughing} and \type{parrot} allow to change the bill expression:
+\stopmode
+\startmode[**es]
+Adicionalmente, \type{grumpy}, \type{laughing} y \type{parrot} cambian el pico del pato:
+\stopmode
+%
+\startbuffer
+\ducks[grumpy=yes]%
+\ducks[laughing=yes]%
+\ducks[parrot=yes]%
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Duck expressions,es=Expresiones del pato]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+%
+\startmode[**en]
+If the duck is too shy, you can also add some blush to it.
+\stopmode
+\startmode[**es]
+Si el patito es tímido, puedes añadirle algo de rubor.
+\stopmode
+%
+\startbuffer
+%\usecolors[svg]
+\ducks
+    [blush=yes,
+    blushcolor=deeppink]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Blushing duck,es=Patito con rubor] \NEW
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\blank
+\startmode[**en]
+My girlfriend breeds muscovy ducks (\emph{Cairina moschata}), so I decided to include caruncles for her to use them.
+\stopmode
+\startmode[**es]
+Mi novia cría patos criollos (\emph{Cairina moschata}) por lo que decidí incluir carúnculas para que ella pueda usarlas.
+\stopmode
+\startbuffer
+\ducks
+[caruncle=yes,
+bodycolor=xcolorlightgray,
+billcolor=xcolorpink,
+wing=yes,
+wingcolor=xcolorblack]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Muscovy ducks,es=Patos criollos] \NEW
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\stopsection
+
+\startsection[title={\translate[en=Hair styles,es=Cabello]}]
+\startmode[**en]
+While ducks don't have actual hair, they can have a "hairdo" on their feathers. Needless to say, ducks have swag. Here some possibilities:
+\stopmode
+\startmode[**es]
+Si bien los patos en realidad no tienen cabello, se les puede «peinar» las plumas. No hace falta recordar que los patos tienen estilo. Algunas posibilidades son las siguientes:
+\stopmode
+\startbuffer
+\ducks[longhair=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Long hair,es=Cabello largo]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+%\blank
+\startbuffer
+\ducks[shorthair=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Short hair,es=Cabello corto]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+%\blank
+\startbuffer
+\ducks[crazyhair=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Crazy hair,es=Cabello alborotado]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+%\blank
+\startbuffer
+\ducks[recedinghair=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Receding hair,es=Cabello con entradas]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+%\blank
+\startbuffer
+\ducks[mohican=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Mohican,es=Mohicano] 
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+%\blank
+\startbuffer
+\ducks[mullet=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Mullet,es=Greñas] 
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\stopsection
+
+\startsection[title={\translate[en=Clothing,es=Ropa]}]
+\startbuffer
+\ducks[tshirt=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=T-shirt,es=Polo] 
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\startbuffer
+\ducks[jacket=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Jacket,es={Casaca, impermeable o chaqueta}] 
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\startbuffer
+\ducks[aodai=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \emph{Áo dài} 
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\startbuffer
+\ducks[cape=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Cape,es=Capa] 
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\stopsection
+
+\startsection[title={\translate[en=Accessories,es=Accesorios]}]
+\startbuffer
+\ducks[water=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=A duck swimming,es=Un pato nadando]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\startbuffer
+\ducks[alien=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Alien duck,es=Patito extraterrestre]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\startbuffer
+\ducks[hat=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Hat duck,es=Un pato con sombrero]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\startbuffer
+\ducks[tophat=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Tophat duck,es=Pato con sombrero de copa] 
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startbuffer
+\ducks[strawhat=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Strawhat duck,es=Pato con sombrero de paja]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\startbuffer
+\ducks[cap=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Basecup duck,es=Pato con gorrita]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\startbuffer
+\ducks[conicalhat=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Conical hat duck,es=Pato con sombrero cónico]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\startbuffer
+\ducks[santa=yes,beard=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Santa duck,es=Pato Noel]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startbuffer
+%\usecolors[svg]
+\ducks
+    [graduate=yes,
+    tassel=paleturquoise]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Graduate duck,es=Pato graduado]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startbuffer
+\ducks[beret=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Beret duck,es=Pato con boina]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startbuffer
+\ducks[peakedcap=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Peaked cap duck,es=Pato con gorra de visera]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startbuffer
+%\usecolors[svg]
+\ducks
+    [harlequin=yes,
+    harlequincolor=black,
+    niuqelrah=crimson]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Harlequin duck,es=Pato arlequín]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startbuffer
+\ducks[sailor=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Sailor duck,es=Pato marinero]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Patos con corona
+\startbuffer
+\ducks[crown=yes]%
+\ducks[kingcrown=yes]%
+\ducks[queencrown=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Crown ducks,es=Patos con corona]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Patos con casco
+\startbuffer
+\ducks[helmet=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Helmet duck,es=Pato con casco]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato vikingo
+\startbuffer
+\ducks[viking=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Viking duck,es=Pato vikingo]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato diablo
+\startbuffer
+\ducks[devil=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Devil duck,es=El pato está en los detalles]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato unicornio
+\startbuffer
+%\usecolors[svg]
+\ducks
+    [unicorn=yes,
+    bodycolor=xcolorpink,
+    longhair=yes,
+    longhaircolor=orchid]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Unicorn duck,es=Pato unicornio]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato conejo
+\startbuffer
+\ducks[bunny=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Bunny duck,es=Pato conejo]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato oveja
+\startbuffer
+\ducks[sheep=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Sheep duck,es=Pato oveja]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato caballo
+\startbuffer
+\ducks[horsetail=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Horse duck,es=Pato caballo]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato bruja
+\startbuffer
+\ducks
+    [witch=yes,
+    magicwand=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Witch duck,es=Pato bruja]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con anteojos
+\startbuffer
+\ducks[glasses=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Glasses duck,es=Pato con anteojos]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con gafas
+\startbuffer
+\ducks
+    [sunglasses=yes,
+    sunglassescolor=blue]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Sunglasses duck,es=Pato con gafas]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato héroe
+\startbuffer
+\ducks
+    [mask=yes,
+    maskcolor=darkred,
+    cape=yes,
+    capecolor=darkred]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Superhero duck,es=Superpato]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Patos con carteles
+\startbuffer
+\ducks
+    [signpost=yes,
+    signtext={\tfxx\CONTEXT}]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Signpost ducks,es=Patos con carteles]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Patos parlantes
+\startbuffer
+\ducks
+    [speech=yes,
+    speechtext=\Lua]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Speaking duck,es=Pato parlante]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato pensativo
+\startbuffer
+\ducks
+    [think=yes,
+    thinktext=Wow]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Thinking duck,es=Pato pensativo]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con botones
+\startbuffer
+\ducks[buttons=yes]%
+\ducks
+    [jacket=yes,
+    buttons=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Buttons ducks,es=Patos con botones]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con libro
+\startbuffer
+\ducks[book=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Book duck,es=Pato con libro]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con bate de críquet
+\startbuffer
+\ducks[cricket=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Cricket duck,es=Pato con bate de críquet]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con palo de hockey
+\startbuffer
+\ducks[hockey=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Hockey duck,es=Pato con palo de \emph{hockey}]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato futbolista
+\startbuffer
+\ducks[book=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Football duck,es=Pato futbolista]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con sable de luz
+\startbuffer
+\ducks[lightsaber=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Lightsaber duck,es=Pato con sable de luz]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con antorcha
+\startbuffer
+\ducks[torch=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Torch duck,es=Pato con antorcha]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato preso
+\startbuffer
+\ducks[prison=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Prison duck,es=Pato preso]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato pastor
+\startbuffer
+\ducks[crozier=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Crozier duck,es=Pato con báculo]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con collar
+\startbuffer
+\ducks[necklace=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Necklace duck,es=Pato con collar]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Patos con helado
+\startbuffer
+\ducks[icecream=yes]%
+\ducks
+    [icecream=yes,
+    flavora=brown,
+    flavorb=red,
+    flavorc=green]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Icecream ducks,es=Patos comiendo helado]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato chef
+\startbuffer
+\ducks[chef=yes,rollingpin=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Chef duck,es=Pato chef]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato cumpleañero
+\startbuffer
+\ducks[cake=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Cake duck,es=Pato cumpleañero]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato pizzero
+\startbuffer
+\ducks[pizza=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Pizza duck,es=Pato pizzero]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con pan baguette
+\startbuffer
+\ducks[baguette=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Baguette duck,es=Pato con pan \emph{baguette}]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con queso
+\startbuffer
+\ducks[cheese=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Cheese duck,es=Pato con queso]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con batido
+\startbuffer
+\ducks[milkshake=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Milkshake duck,es=Pato con batido]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato enólogo
+\startbuffer
+\ducks[wine=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Wine duck,es=Pato enólogo]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato alcohólico
+\startbuffer
+\ducks[cocktail=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Cocktail duck,es=Pato alcohólico]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato alado
+\startbuffer
+%\usecolors[svg]
+\ducks
+    [wing=yes,
+    wingcolor=peru]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Wing duck,es=Pato alado]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con canasta
+\startbuffer
+\ducks[basket=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Basket duck,es=Pato con canasta]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato de Pascua
+\startbuffer
+%\usecolors[svg]
+\ducks%
+    [bunny=yes,
+    easter=yes]%
+\ducks%
+    [bunny=yes,
+    easter=yes,
+    egga=teal,
+    eggb=deeppink,
+    eggc=darkturquoise]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Easter duck,es=Pato de Pascua]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato doctor
+\startbuffer
+\ducks[stethoscope=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Ducktor,es=Pato doctor]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con bufanda
+\startbuffer
+\ducks[neckerchief=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Neckerchief duck,es=Pato con bufanda]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato de nieve
+\startbuffer
+\ducks[snowduck=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Snow duck,es=Pato de nieve]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato vampiro
+\startbuffer
+\ducks[vampire=yes]%
+\ducks%
+    [laughing=yes,
+    vampire=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Vampire duck,es=Pato vampiro]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato oráculo
+\startbuffer
+\ducks[crystalball=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Clairvoyant duck,es=Pato clarividente]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Patos cavadores
+\startbuffer
+\ducks[shovel=yes]%
+\ducks[pickaxe=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Shovelling ducks,es=Patos cavadores]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Patos con sombrilla
+\startbuffer
+\ducks[umbrella=yes]%
+\ducks[umbrellaclosed=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Umbrella ducks,es=Patos con sombrilla]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato Overleaf
+\startbuffer
+\ducks[overleaf=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Overleaf Duck,es=Pato Overleaf]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con taza
+\startbuffer
+\ducks[mug=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Mug duck,es=Pato con tacita (de café o chocolate)] \NEW
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato hawaiano
+\startbuffer
+\ducks[lei=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Lei duck,es=Pato hawaiano] \NEW
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+%%% Pato con escudo
+\startbuffer
+\ducks[shield=yes]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Shield duck,es=Pato con escudo] \NEW
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startmode[**en]
+For us Peruvian \TEX\ users, I've added a \emph{chullo} (a type of winter hat common in Peru and Bolivia) because, well, it's an easy way of recognizing us.
+\stopmode
+\startmode[**es]
+Para los usuarios peruanos de \TEX, incluyéndome, he incluido un chullo porque, bueno, usamos chullo (?).
+\stopmode
+%%% Pato con chullo
+\startbuffer
+\ducks
+[chullo=yes,
+chullocolor=green,
+laughing=yes,
+think=yes,
+thinktext={\tfxx ¡Arriba Perú!}]
+\stopbuffer
+%
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=A Peruvian duck,es=Pato peruano] \NEW
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE 
+\blank
+\stopsection
+\stopchapter
+\startchapter[title={\translate[en=Hooks,es=Puntos de enganche]}]
+\startmode[**en]
+Since posibilities to customize ducks are infinite and we cannot include all them here, hooks are available for further customization so we go ahead with our styled ducks. Hooks are the following, respectively.
+\stopmode
+\startmode[**es]
+Puesto que las posibilidades para personalizar a los patitos son ilimitadas y no podemos incluirlas aquí, existen puntos de enganche (\emph{hooks})\startfootnote Gracias a Romano Giannetti por la sugerencia de traducción.\stopfootnote\ para dar un paso adelante con la personalización de los patitos. Los puntos de enganche son los siguientes, en orden de aparición.
+\stopmode
+%
+\startitemize[n,packed]
+\startitem \type{backgroundhook} \translate[en=,es=(fondo)]\stopitem
+\startitem \type{bodyhook} \translate[en=,es=(cuerpo)]\stopitem
+\startitem \type{clothinghook} \translate[en=,es=(ropa)]\stopitem
+\startitem \type{hathook} \translate[en=,es=(sombrero)]\stopitem
+\startitem \type{foregroundhook} \translate[en=,es=(primer plano)]\stopitem
+\stopitemize
+%
+\startmode[**en]
+An example is shown below:
+\stopmode
+\startmode[**es]
+Un ejemplo de uso sería el siguiente:
+\stopmode
+\startbuffer
+\startuseMPgraphic{mybackground}
+fill fullcircle scaled 2 withcolor darkgreen;
+\stopuseMPgraphic
+\startuseMPgraphic{myforeground}
+fill unittriangle scaled 1/2 withcolor "xcolorteal";
+\stopuseMPgraphic
+\ducks
+    [color=darkred,
+    pupilcolor=darkblue,
+    backgroundhook=mybackground,
+    foregroundhook=myforeground,
+    lei=yes]
+\stopbuffer
+\typebuffer\getbuffer
+\stopchapter
+\startchapter[title={\translate[en=Random ducks,es=Patos aleatorios]}]
+\startmode[**en]
+It is possible to autogenerate a random duck with \type{\randomducks}, which in turn chooses a random headpiece with \type{\randomduckhead} and an additional accessory with \type{\randomduckaccessory}:
+\stopmode
+\startmode[**es]
+Es posible elegir un patito generado aleatoriamente con \type{\randomducks}, el cual elige un elemento aleatorio en la cabeza invocado por el commando \type{\randomduckhead} y un accesorio adicional invocado por el comando \type{\randomduckaccessory}.
+\stopmode
+\startbuffer
+\randomducks
+\stopbuffer
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Random duck,es=Patito aleatorio]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\startmode[**en]
+Unlike TikZducks, there's no need to shuffle options, since Lua does it for us. Furthermore, both \type{\randomduckhead} and \type{\randomduckaccessory} can be called independently.
+\stopmode
+\startmode[**es]
+A diferencia de lo que sucede con TikZducks, no es necesario «barajar» las opciones, puesto que Lua efectúa esta operación automáticamente. Además, tanto \type{\randomduckhead} como \type{\randomduckaccessory} se pueden utilizar independientemente.
+\stopmode
+\startbuffer
+\ducks
+    [\randomduckhead=yes,
+    \randomduckaccessory=yes]
+\stopbuffer
+\blank
+\bTABLE
+\bTR
+    \bTD[nc=2]
+    \translate[en=Duck with random accessories,es=Patito con accesorios aleatorios]
+    \eTD
+\eTR
+\bTR
+    \bTD
+    \typebuffer
+    \eTD
+    \bTD
+    \getbuffer
+    \eTD
+\eTR
+\eTABLE
+\stopchapter
+
+\startchapter[title={\translate[en=To do,es=Por hacer]}]
+
+\startitemize[packed]
+\startitem 
+\startmode[**en]
+Support for stripes is lacking. I lack motivation for that, because I find football boring, but I know many \TEX\ users don't agree. So I'll do it eventually (adding only one pattern is easy, adding more is cumbersome). 
+\stopmode
+\startmode[**es]
+Aún no es posible utilizar franjas en las camisetas. Me falta motivación debido a que el fútbol me aburre como ver la pintura secar, pero sé que muchos otros usuarios de \TEX\ piensan diferente. Lo haré eventualmente (añadir un solo patrón es fácil, pero añadir más es complicado sin afear la interfaz).
+\stopmode
+\stopitem
+\stopitemize
+
+\stopchapter
+
+\stopdocument
